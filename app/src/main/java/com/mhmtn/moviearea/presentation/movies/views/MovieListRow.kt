@@ -38,9 +38,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.mhmtn.moviearea.R
-import com.mhmtn.moviearea.data.cache.MovieDatabase
 import com.mhmtn.moviearea.domain.model.Movie
-import com.mhmtn.moviearea.presentation.movie_favs.views.favMovieList
 import com.mhmtn.moviearea.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
