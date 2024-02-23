@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -27,8 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -45,71 +49,74 @@ fun MovieDetailScreen(
     var isFavorite = remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
-        .fillMaxSize()
         .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         state.movie?.let {
-            Column(
+            Column(modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(painter = rememberImagePainter(data = it.Poster),
                     contentDescription = it.Title,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .padding(16.dp)
-                        .size(300.dp, 300.dp)
-                        .clip(RectangleShape)
-                        .align(CenterHorizontally)
+                        .fillMaxWidth()
+                        .height(320.dp)
                     )
 
-                Text(text = it.Title,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                Column (modifier = Modifier.fillMaxWidth().weight(1f).padding(20.dp)) {
+                    Text(text = it.Title,
+                        fontSize= 38.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = it.Type,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = it.Type,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = "Yıl : " + it.Year,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = "Yıl : " + it.Year,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = "Tür : " +  it.Genre,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = "Tür : " +  it.Genre,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = "Oyuncular : " +it.Actors,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = "Oyuncular : " +it.Actors,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = "Yönetmen : " + it.Director,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = "Yönetmen : " + it.Director,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = it.Country,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = it.Country,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
 
-                Text(text = it.imdbRating,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(12.dp),
-                    color = Color.Black
-                )
+                    Text(text = it.imdbRating,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(12.dp),
+                        color = Color.Black
+                    )
+
+                }
+
 
                 IconToggleButton(
                     checked = isFavorite.value,
@@ -145,7 +152,7 @@ fun MovieDetailScreen(
         }
 
         if (state.isLoading){
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(modifier = Modifier.align(Center))
         }
 
     }

@@ -11,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mhmtn.moviearea.presentation.movie_detail.views.MovieDetailScreen
-import com.mhmtn.moviearea.presentation.movie_favs.views.MovieFavScreen
 import com.mhmtn.moviearea.presentation.movies.views.MoviesScreen
 import com.mhmtn.moviearea.presentation.theme.MovieAreaTheme
 import com.mhmtn.moviearea.util.Constants.IMDB_ID
@@ -37,10 +36,6 @@ class MainActivity : ComponentActivity() {
                             MovieDetailScreen(navController = navController)
                         }
 
-
-                        composable("movie_fav_screen"){
-                            MovieFavScreen(navController = navController)
-                        }
                     }
 
                 }
