@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhmtn.moviearea.presentation.movies.MoviesEvent
 import com.mhmtn.moviearea.presentation.movies.MoviesViewModel
 
@@ -41,6 +44,12 @@ fun MoviesScreen(
     navController: NavController,
     viewModel : MoviesViewModel = hiltViewModel()
 ) {
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = Color.White,
+        darkIcons = true
+    )
 
     val state = viewModel.state.value
 
@@ -51,7 +60,7 @@ fun MoviesScreen(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SearchBar(modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth()
                     .padding(20.dp),
                     hint = "Film Arayın",
                     onSearch = {
@@ -76,7 +85,6 @@ fun MoviesScreen(
                     })
 
                  */
-
             }
 
             LazyVerticalGrid(columns = GridCells.Fixed(2),
@@ -91,6 +99,10 @@ fun MoviesScreen(
                     )
                 }
 
+            }
+
+            if (state.isLoading){
+                CircularProgressIndicator(modifier = Modifier.align(CenterHorizontally))
             }
 /*
             LazyColumn(modifier = Modifier.fillMaxSize()){

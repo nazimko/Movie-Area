@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhmtn.moviearea.presentation.movie_detail.MovieDetailViewModel
 
 //val favMovieList : ArrayList<MovieDetail> = ArrayList()
@@ -48,9 +50,16 @@ fun MovieDetailScreen(
     val state = movieDetailViewModel.state.value
     var isFavorite = remember { mutableStateOf(false) }
 
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = Color.White,
+        darkIcons = true
+    )
+
     Box(modifier = Modifier
-        .background(Color.White),
-        contentAlignment = Alignment.Center
+        .background(Color.White)
+        .fillMaxSize(),
+        contentAlignment = Center
     ) {
         state.movie?.let {
             Column(modifier = Modifier.fillMaxSize(),
@@ -65,7 +74,10 @@ fun MovieDetailScreen(
                         .height(320.dp)
                     )
 
-                Column (modifier = Modifier.fillMaxWidth().weight(1f).padding(20.dp)) {
+                Column (modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(20.dp)) {
                     Text(text = it.Title,
                         fontSize= 38.sp,
                         textAlign = TextAlign.Center,
@@ -151,8 +163,9 @@ fun MovieDetailScreen(
                     .align(Center))
         }
 
+
         if (state.isLoading){
-            CircularProgressIndicator(modifier = Modifier.align(Center))
+                CircularProgressIndicator(modifier = Modifier.align(Center))
         }
 
     }
