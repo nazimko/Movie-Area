@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
@@ -40,6 +41,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mhmtn.moviearea.presentation.movies.MoviesEvent
 import com.mhmtn.moviearea.presentation.movies.MoviesViewModel
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
 @Composable
 fun MoviesScreen(
@@ -112,7 +114,7 @@ fun MoviesScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBar(modifier: Modifier, hint: String = "", onSearch: (String) -> Unit = {}) {
 
@@ -126,12 +128,15 @@ fun SearchBar(modifier: Modifier, hint: String = "", onSearch: (String) -> Unit 
         )
     }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Box(modifier = modifier) {
         TextField(value = text, onValueChange = {
             text = it
         },
             keyboardActions = KeyboardActions(onDone = {
                 onSearch(text)
+                keyboardController?.hide()
             }),
             maxLines = 1,
             singleLine = true,
