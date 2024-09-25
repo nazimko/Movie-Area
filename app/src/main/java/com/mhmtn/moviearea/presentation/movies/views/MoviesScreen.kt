@@ -9,16 +9,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -42,7 +44,7 @@ import com.mhmtn.moviearea.presentation.movies.MoviesViewModel
 @Composable
 fun MoviesScreen(
     navController: NavController,
-    viewModel : MoviesViewModel = hiltViewModel()
+    viewModel: MoviesViewModel = hiltViewModel()
 ) {
 
     val systemUiController = rememberSystemUiController()
@@ -53,14 +55,17 @@ fun MoviesScreen(
 
     val state = viewModel.state.value
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)){
-        Column {
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 SearchBar(modifier = Modifier
-                    .fillMaxWidth()
                     .padding(20.dp),
                     hint = "Film Arayın",
                     onSearch = {
@@ -68,76 +73,64 @@ fun MoviesScreen(
                     }
                 )
 
-
-               /* Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null,
-                    modifier = Modifier.background(Color.White)
-                        .clickable {
-                            navController.navigate("movie_fav_screen")
-                        })
-
-                */
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.outline_star_white_48dp),
-                    contentDescription = "Favorites",
-                    Modifier.clickable {
-                        navController.navigate("movie_fav_screen")
-                    })
-
-                 */
+                IconButton(
+                    onClick = {
+                        navController.navigate("movie_fav_screen")},
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "",
+                        tint = Color.Red
+                    )
+                }
             }
 
-            LazyVerticalGrid(columns = GridCells.Fixed(2),
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
-            ){
-                items(state.movies){
-                    MovieCard(movie = it, onItemClick = {
-                        navController.navigate("movie_detail_screen/${it.imdbID}")
-                    }
-                    )
-                }
-
-            }
-
-            if (state.isLoading){
-                CircularProgressIndicator(modifier = Modifier.align(CenterHorizontally))
-            }
-/*
-            LazyColumn(modifier = Modifier.fillMaxSize()){
-                items(state.movies){
-                    MovieCard(movie = it, onItemClick = {
-                        navController.navigate("movie_detail_screen/${it.imdbID}")
+            ) {
+                items(state.movies) { movie ->
+                    MovieCard(
+                        movie = movie,
+                        onItemClick = {
+                            navController.navigate("movie_detail_screen/${it.imdbID}")
+                    },
+                        onFavoriteClick = {
+                            viewModel.onFavoriteClick(movie)
                         }
                     )
                 }
+
             }
 
- */
-
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(CenterHorizontally))
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier, hint : String = "", onSearch: (String) -> Unit = {} ) {
+fun SearchBar(modifier: Modifier, hint: String = "", onSearch: (String) -> Unit = {}) {
 
     var text by remember {
         mutableStateOf("")
     }
 
     var isHintDisplayed by remember {
-        mutableStateOf(hint != ""
+        mutableStateOf(
+            hint != ""
         )
     }
 
     Box(modifier = modifier) {
-        TextField(value = text , onValueChange = {
+        TextField(value = text, onValueChange = {
             text = it
-        } ,
-            keyboardActions = KeyboardActions(onDone ={
+        },
+            keyboardActions = KeyboardActions(onDone = {
                 onSearch(text)
             }),
             maxLines = 1,
@@ -146,7 +139,6 @@ fun SearchBar(modifier: Modifier, hint : String = "", onSearch: (String) -> Unit
             shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.textFieldColors(containerColor = Color.White),
             modifier = Modifier
-                .fillMaxWidth()
                 .shadow(5.dp, CircleShape)
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp)
@@ -156,10 +148,12 @@ fun SearchBar(modifier: Modifier, hint : String = "", onSearch: (String) -> Unit
                 }
         )
 
-        if (isHintDisplayed){
-            Text(text = hint,
-                 color = Color.DarkGray,
-                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
+        if (isHintDisplayed) {
+            Text(
+                text = hint,
+                color = Color.DarkGray,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+            )
 
         }
     }

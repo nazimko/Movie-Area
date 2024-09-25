@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mhmtn.moviearea.presentation.fav_movies.MovieFavScreen
 import com.mhmtn.moviearea.presentation.movie_detail.views.MovieDetailScreen
 import com.mhmtn.moviearea.presentation.movies.views.MoviesScreen
 import com.mhmtn.moviearea.presentation.theme.MovieAreaTheme
@@ -33,11 +34,13 @@ class MainActivity : ComponentActivity() {
 
                         }
                         composable(route = "movie_detail_screen/{${IMDB_ID}}") {
-                            MovieDetailScreen(navController = navController)
+                            MovieDetailScreen()
                         }
 
+                        composable("movie_fav_screen"){
+                            MovieFavScreen(navController = navController)
+                        }
                     }
-
                 }
             }
         }

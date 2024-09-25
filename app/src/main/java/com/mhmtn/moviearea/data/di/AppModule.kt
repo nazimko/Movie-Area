@@ -1,5 +1,9 @@
 package com.mhmtn.moviearea.data.di
 
+import android.app.Application
+import androidx.room.Room
+import com.mhmtn.moviearea.data.db.MovieDAO
+import com.mhmtn.moviearea.data.db.MovieDatabase
 import com.mhmtn.moviearea.data.remote.MovieAPI
 import com.mhmtn.moviearea.data.repo.MovieRepoImpl
 import com.mhmtn.moviearea.domain.repo.MovieRepo
@@ -29,7 +33,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepo(api: MovieAPI) : MovieRepo{
-        return MovieRepoImpl (api = api)
+    fun provideMovieRepo(api: MovieAPI, db: MovieDatabase) : MovieRepo{
+        return MovieRepoImpl (api = api, dao = db.dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieDatabase (app:Application): MovieDatabase {
+        return Room.databaseBuilder(
+            app,
+            MovieDatabase::class.java,
+            "MovieDatabase"
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    fun provideDao(database: MovieDatabase):MovieDAO{
+        return database.dao
     }
 }

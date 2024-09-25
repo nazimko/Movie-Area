@@ -10,22 +10,24 @@ import retrofit2.HttpException
 import java.io.IOError
 import javax.inject.Inject
 
-class GetMovieUseCase @Inject constructor(private val repo : MovieRepo){
+class GetMovieUseCase @Inject constructor(
+    private val repo: MovieRepo
+) {
 
-    fun executeGetoMovie(search : String): Flow<Resource<List<Movie>>>  = flow {
+    fun executeGetoMovie(search: String): Flow<Resource<List<Movie>>> = flow {
         try {
             emit(Resource.Loading())
             val movieList = repo.getMovies(search)
-            if(movieList.Response.equals("True")) {
+            if (movieList.Response.equals("True")) {
                 emit(Resource.Success(movieList.toMovieList()))
-            }else if(movieList.Response.equals("False")) {
+            } else if (movieList.Response.equals("False")) {
                 emit(Resource.Error(message = "No movie found. :("))
             }
 
-        }catch (e: IOError) {
+
+        } catch (e: IOError) {
             emit(Resource.Error("No Internet."))
-        }
-        catch (e: HttpException) {
+        } catch (e: HttpException) {
             emit((Resource.Error(message = e.localizedMessage ?: "Error")))
         }
     }

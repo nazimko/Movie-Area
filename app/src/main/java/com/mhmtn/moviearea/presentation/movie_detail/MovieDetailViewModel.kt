@@ -27,7 +27,6 @@ class MovieDetailViewModel @Inject constructor(
             getMovieDetail(it)
         }
     }
-
     private fun getMovieDetail (imdbId : String) {
         getMovieDetailUseCase.executeGetoMovieDetail(imdbId = imdbId).onEach {
             when (it) {

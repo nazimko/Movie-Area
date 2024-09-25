@@ -31,5 +31,5 @@ data class MovieDetailDTO(
 )
 
 fun MovieDetailDTO.toMovieDetail() : MovieDetail{
-    return MovieDetail(Actors,Country,Director,Genre, Language, Poster, Rated, Released, Title, Type, Year, imdbRating)
+    return MovieDetail(Actors,Country,Director,Genre, Language, Poster, Rated, Released, Title, Type, Year, imdbRating, imdbID)
 }

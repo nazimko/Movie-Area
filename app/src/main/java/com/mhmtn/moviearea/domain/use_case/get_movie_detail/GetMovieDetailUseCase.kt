@@ -1,8 +1,6 @@
 package com.mhmtn.moviearea.domain.use_case.get_movie_detail
 
 import com.mhmtn.moviearea.data.remote.DTO.toMovieDetail
-import com.mhmtn.moviearea.data.remote.DTO.toMovieList
-import com.mhmtn.moviearea.domain.model.Movie
 import com.mhmtn.moviearea.domain.model.MovieDetail
 import com.mhmtn.moviearea.domain.repo.MovieRepo
 import com.mhmtn.moviearea.util.Resource

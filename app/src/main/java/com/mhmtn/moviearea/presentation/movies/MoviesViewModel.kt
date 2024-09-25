@@ -4,36 +4,43 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mhmtn.moviearea.data.repo.MovieRepoImpl
+import com.mhmtn.moviearea.domain.model.Movie
 import com.mhmtn.moviearea.domain.use_case.get_movies.GetMovieUseCase
 import com.mhmtn.moviearea.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MoviesViewModel @Inject constructor(private val getMovieUseCase : GetMovieUseCase) : ViewModel() {
+class MoviesViewModel @Inject constructor(
+    private val getMovieUseCase : GetMovieUseCase,
+    private val repoImpl: MovieRepoImpl
+) : ViewModel() {
 
-    private val _state = mutableStateOf<MovieState>(MovieState())
+    private val _state = mutableStateOf(MovieState())
     val state : State<MovieState> = _state
 
-
-/*
-    init {
-        getMovies(_state.value.search)
-    }
-
- */
-
     private fun getMovies(search : String) {
-        getMovieUseCase.executeGetoMovie(search = search).onEach {
-            when(it) {
+        getMovieUseCase.executeGetoMovie(search = search).onEach {result->
+            when(result) {
                 is Resource.Success -> {
-                    _state.value = MovieState(movies = it.data ?: emptyList())
+                    val movieIds = result.data!!.map { it.imdbID }
+
+                    repoImpl.getFavoriteMovies(movieIds).collect{
+                        val updatedMovies = result.data.map {movie->
+                            movie.copy(isFavorite = it.contains(movie.imdbID))
+                        }
+                        _state.value = MovieState(
+                            movies = updatedMovies
+                        )
+                    }
                 }
 
                 is Resource.Error -> {
-                    _state.value= MovieState(error = it.message ?: "Error.")
+                    _state.value= MovieState(error = result.message ?: "Error.")
                 }
 
                 is Resource.Loading -> {
@@ -43,8 +50,20 @@ class MoviesViewModel @Inject constructor(private val getMovieUseCase : GetMovie
         }.launchIn(viewModelScope)
     }
 
-    fun onEvent (event: MoviesEvent){
+    fun onFavoriteClick(movie: Movie) {
+        viewModelScope.launch {
+            if (movie.isFavorite) {
+                repoImpl.delete(movie)
+            } else {
+                repoImpl.insert(movie)
+            }
+            _state.value.movies = _state.value.movies.map {
+                if (it.imdbID == movie.imdbID) it.copy(isFavorite = movie.isFavorite) else it
+            }
+        }
+    }
 
+    fun onEvent (event: MoviesEvent){
         when(event) {
             is MoviesEvent.Search -> {
                 getMovies(event.searchString)
